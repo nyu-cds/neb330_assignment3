@@ -90,7 +90,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
     #change the nested loop from nbody function to one loop
     for i in range(loops*iterations):
         e = 0.0
-        seenit = {}
+        seenit = set()
         
         #use the built-in combinations func to iterate through the keys
         for body1, body2 in combinations(BODIES.keys(), 2):
@@ -104,7 +104,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
             else:
                 #advance
                 update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
-            seenit[body1] = True
+            seenit.add(body1)
         
         #again, check whether its an advance or report_energy step based on i
         for body in BODIES.keys():
