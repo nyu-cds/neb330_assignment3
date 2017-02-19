@@ -91,15 +91,14 @@ def report_energy(loops, reference, iterations, dt = 0.01):
         
         #use the built-in combinations func to iterate through the keys
         for body1, body2 in combinations(BODIES.keys(), 2):
-            if not (body2 in seenit.keys()):
-                ((x1, y1, z1), v1, m1) = BODIES[body1]
-                ((x2, y2, z2), v2, m2) = BODIES[body2]
-                (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)
-                if i % iterations == 0:
-                    e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
-                else:
-                    update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
-                seenit[body1] = 1
+            ((x1, y1, z1), v1, m1) = BODIES[body1]
+            ((x2, y2, z2), v2, m2) = BODIES[body2]
+            (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)
+            if i % iterations == 0:
+                e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
+            else:
+                update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
+            seenit[body1] = 1
         
         for body in BODIES.keys():
             (r, [vx, vy, vz], m) = BODIES[body]
