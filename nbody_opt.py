@@ -104,7 +104,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
             else:
                 #advance
                 update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
-            seenit[body1] = 1
+            seenit[body1] = True
         
         #again, check whether its an advance or report_energy step based on i
         for body in BODIES.keys():
