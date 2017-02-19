@@ -30,8 +30,10 @@ def update_rs(r, dt, vx, vy, vz):
     
 def report_energy(loops, reference, iterations, dt = 0.01):
     '''
-        compute the energy and return it so that it can be printed. 
-        If advance = True, advance one time step instead of reporting the energy.
+        Combined version of the functions offset_momentum, report_energy, and advance.
+        Start by offsetting the momentum. Then, perform the nested loop from the original 
+        nbody function, but change it to one single loop.  In each iteration, either 
+        perform the advance or report energy based on the iteration number.
     '''
     PI = 3.14159265358979323
     SOLAR_MASS = 4 * PI * PI
@@ -72,7 +74,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
                  -9.51592254519715870e-05 * DAYS_PER_YEAR],
                 5.15138902046611451e-05 * SOLAR_MASS)}
     
-
+    #offset momentum
     px=py=pz=0.0
     for body in BODIES.keys():
         (r, [vx, vy, vz], m) = BODIES[body]
@@ -85,6 +87,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
     v[1] = py / m
     v[2] = pz / m
 
+    #change the nested loop from nbody function to one loop
     for i in range(loops*iterations):
         e = 0.0
         seenit = {}
@@ -94,18 +97,23 @@ def report_energy(loops, reference, iterations, dt = 0.01):
             ((x1, y1, z1), v1, m1) = BODIES[body1]
             ((x2, y2, z2), v2, m2) = BODIES[body2]
             (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)
+            #depending on the value of i, either advance or report energy
             if i % iterations == 0:
+                #step for report energy
                 e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
             else:
+                #advance
                 update_vs(v1, v2, dt, dx, dy, dz, m1, m2)
             seenit[body1] = 1
         
+        #again, check whether its an advance or report_energy step based on i
         for body in BODIES.keys():
             (r, [vx, vy, vz], m) = BODIES[body]
             if i % iterations == 0:
                 e += m * (vx * vx + vy * vy + vz * vz) / 2.
             else:
                 update_rs(r, dt, vx, vy, vz)
+        #report energy
         if i % iterations == 0:
             print(e)
 
