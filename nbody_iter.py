@@ -95,7 +95,7 @@ def report_energy(loops, reference, iterations, dt = 0.01):
         e = 0.0
         seenit = set()
         
-        #use the built-in combinations func to iterate through the keys
+        #USE ITERTOOLS HERE
         for body1, body2 in combinations(BODIES.keys(), 2):
             ((x1, y1, z1), v1, m1) = BODIES[body1]
             ((x2, y2, z2), v2, m2) = BODIES[body2]
