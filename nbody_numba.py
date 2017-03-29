@@ -26,6 +26,11 @@ def update_rs(r, dt, vx, vy, vz):
     r[1] += dt * vy
     r[2] += dt * vz
 
+@jit("f8[:](f8[:], f8[:])")
+def vec_deltas(x,y):
+    return np.subtract(x,y)
+
+
 @jit("void(i4, char, i4, f4)")
 def report_energy(loops, reference, iterations, dt = 0.01):
     '''
@@ -96,9 +101,9 @@ def report_energy(loops, reference, iterations, dt = 0.01):
         
         #use the built-in combinations func to iterate through the keys
         for body1, body2 in combinations(BODIES.keys(), 2):
-            ((x1, y1, z1), v1, m1) = BODIES[body1]
-            ((x2, y2, z2), v2, m2) = BODIES[body2]
-            (dx, dy, dz) = (x1-x2, y1-y2, z1-z2)
+            (x1, v1, m1) = BODIES[body1]
+            (x2, v2, m2) = BODIES[body2]
+            (dx, dy, dz) = vec_deltas(x1, x2)
             #depending on the value of i, either advance or report energy
             if i % iterations == 0:
                 #step for report energy
